@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Prompt {
+  id          String   @id @default(cuid())
+  promptName  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  aiImages    AiImage[]
+}
+
+model AiImage {
+  id          String   @id @default(cuid())
+  base64Image String
+  promptName  String
+  promptId    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  prompt      Prompt?  @relation(fields: [promptId], references: [id])
+}
+
+
